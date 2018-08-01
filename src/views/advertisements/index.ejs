@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../static/partials/head.ejs %>
+  </head>
+  <body>
+    <main class="container">
+      <% include ../static/partials/navbar.ejs %>
+
+      <header class="jumbotron my-4">
+        <h1 class="display-3">Advertisements</h1>
+        <p class="lead">Pay only $5.00 a day to have your own personal ad displayed on our Bloccit website!</p>
+      </header>
+
+      <ul class="list-group">
+        <% advertisements.forEach((advertisement) => { %>
+          <li class="list-group-item">
+            <a href="/advertisements/<%= advertisement.id %>"> <%= advertisement.title %> </a>
+          </li>
+        <% }) %>
+      </ul>
+
+    </main>
+  </body>
+</html>
