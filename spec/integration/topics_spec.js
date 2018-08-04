@@ -3,6 +3,7 @@ const server = require("../../src/server");
 const base = "http://localhost:3000/topics/";
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
+const Post = require("../../src/db/models").Post;
 
 describe("routes : topics", () => {
 
@@ -22,10 +23,7 @@ describe("routes : topics", () => {
         console.log(err);
         done();
       });
-
-    });
-
-  });
+    });  
 
   describe("GET /topics", () => {
     it("should return a status code 200 and all topics", (done) => {
@@ -112,7 +110,6 @@ describe("routes : topics", () => {
           });
         });
   describe("POST /topics/:id/update", () => {
-
           it("should update the topic with the given values", (done) => {
              const options = {
                 url: `${base}${this.topic.id}/update`,
@@ -134,5 +131,6 @@ describe("routes : topics", () => {
                 });
               });
           });
-        });
-  });
+      });
+  });            
+});

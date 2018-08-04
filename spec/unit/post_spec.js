@@ -30,7 +30,6 @@ describe("Post", () => {
         done();
       });
     });
-  });
 
   describe("#create()", () => {
 
@@ -98,5 +97,6 @@ describe("Post", () => {
       });
     });
   });
-
+ });
+ 
 });
