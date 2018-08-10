@@ -5,7 +5,7 @@ module.exports = {
         res.render("posts/new", {topicId: req.params.topicId});
     },
     create(req, res, next){
-        let newPost= {
+        let newPost = {
           title: req.body.title,
           body: req.body.body,
           topicId: req.params.topicId
