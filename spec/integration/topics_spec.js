@@ -46,15 +46,14 @@ describe("routes : topics", () => {
           });
         });
   describe("POST /topics/create", () => {
-          const options = {
-            url: `${base}create`,
-            form: {
-              title: "blink-182 songs",
-              description: "What's your favorite blink-182 song?"
-            }
-          };
-    
           it("should create a new topic and redirect", (done) => {
+            const options = {
+              url: `${base}create`,
+              form: {
+                title: "blink-182 songs",
+                description: "What's your favorite blink-182 song?"
+              }
+            };
             request.post(options,
               (err, res, body) => {
                 Topic.findOne({where: {title: "blink-182 songs"}})
@@ -71,7 +70,30 @@ describe("routes : topics", () => {
               }
             );
           });
+
+        it("should not create a new topic that fails validations", (done) => {
+          const options = {
+            url: `${base}create`,
+            form: {
+              title: "a",
+              description: "b"
+            }
+          };
+          request.post(options,
+            (err, res, body) => {
+              Topic.findOne({where: {title: "a"}})
+              .then((topic) => {
+                  expect(topic).toBeNull();
+                  done();
+              })
+              .catch((err) => {
+                console.log(err);
+                done();
+              });
+            }
+          );
         });
+      });
   describe("GET /topics/:id", () => {
           it("should render a view with the selected topic", (done) => {
             request.get(`${base}${this.topic.id}`, (err, res, body) => {
@@ -99,7 +121,6 @@ describe("routes : topics", () => {
           });
         });
   describe("GET /topics/:id/edit", () => {
-
           it("should render a view with an edit topic form", (done) => {
             request.get(`${base}${this.topic.id}/edit`, (err, res, body) => {
               expect(err).toBeNull();
