@@ -25,7 +25,7 @@ describe("routes : topics", () => {
         done();
       });
     }); 
-  });
+  
     
     // define the admin user context
     describe("admin user performing CRUD actions for Topic", () => {
@@ -330,5 +330,6 @@ describe("routes : topics", () => {
                 });
             });
         });
+      });
 
 });
