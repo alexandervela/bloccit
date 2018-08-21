@@ -195,11 +195,92 @@ describe("routes : comments", () => {
    
               });
             })
-   
           });
-   
         });
    
       }); //end context for signed in user
+
+      describe("signed in admin performing CRUD actions for Comment", () => {
+
+        beforeEach((done) => {    // before each suite in this context
+          request.get({           // mock authentication
+            url: "http://localhost:3000/auth/fake",
+            form: {
+              role: "admin",     // mock authenticate as an admin
+              userId: this.user.id
+            }
+          },
+            (err, res, body) => {
+              done();
+            }
+          );
+        });
+        
+        it("should delete the comment if the user is an admin", (done) => {
+          Comment.all()
+            .then((comments) => {
+              const commentCountBeforeDelete = comments.length;
+   
+              expect(commentCountBeforeDelete).toBe(1);
+   
+              request.post(
+               `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                (err, res, body) => {
+                expect(res.statusCode).toBe(302);
+                Comment.all()
+                .then((comments) => {
+                  expect(err).toBeNull();
+                  expect(comments.length).toBe(commentCountBeforeDelete - 1);
+                  done();
+                });
+   
+              });
+            })
+        });
+      }); //end context for signed in admin
+
+      describe("additional member testing", () => {
+        beforeEach((done) => {
+          User.create({
+            email: "newmember@example.com",
+            password: "123456",
+            role: "member"
+          })
+          .then((user) => {
+            request.get({
+              url: "http://localhost:3000/auth/fake",
+              form: {
+                role: user.role,
+                userId: user.id,
+                email: user.email
+              }
+            },
+              (err, res, body) => {
+                done();
+              }
+            );
+          });
+        });
+        
+        it("should not allow a member to delete another member's comment", (done) => {
+          Comment.all()
+            .then((comments) => {
+              const commentCountBeforeDelete = comments.length;
+   
+              expect(commentCountBeforeDelete).toBe(1);
+   
+              request.post(
+               `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                (err, res, body) => {
+                Comment.all()
+                .then((comments) => {
+                  expect(err).toBeNull();
+                  expect(comments.length).toBe(commentCountBeforeDelete);
+                  done();
+                });
+              });
+            })
+        });
+      });
 
 });
