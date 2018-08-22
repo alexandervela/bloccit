@@ -82,6 +82,26 @@ describe("Vote", () => {
             done();
           });
         });
+
+        it("should not create an upvote that fails validations", (done) => {
+          Vote.create({
+            value: 2,
+            postId: this.post.id,
+            userId: this.user.id
+          })         
+          .then((vote) => {
+
+            // the code in this block will not be evaluated since the validation error
+           // will skip it. Instead, we'll catch the error in the catch block below
+           // and set the expectations there
+            
+            done();
+          })
+          .catch((err) => {
+            expect(err.message).toContain("Validation isIn on value failed");
+            done();
+          });
+        });
  
         it("should create a downvote on a post for a user", (done) => {
           Vote.create({
@@ -98,6 +118,26 @@ describe("Vote", () => {
           })
           .catch((err) => {
             console.log(err);
+            done();
+          });
+        });
+
+        it("should not create a downvote that fails validations", (done) => {
+          Vote.create({
+            value: -2,
+            postId: this.post.id,
+            userId: this.user.id
+          })         
+          .then((vote) => {
+
+            // the code in this block will not be evaluated since the validation error
+           // will skip it. Instead, we'll catch the error in the catch block below
+           // and set the expectations there
+            
+            done();
+          })
+          .catch((err) => {
+            expect(err.message).toContain("Validation isIn on value failed");
             done();
           });
         });
@@ -123,6 +163,30 @@ describe("Vote", () => {
  
           })
         });
+
+        it("should not create a new vote but instead update the vote if one already exists", (done) => {
+          Vote.create({
+            value: -1,
+            postId: this.post.id,
+            userId: this.user.id
+          })
+          .then((vote) => {
+            this.vote = vote;
+
+          Vote.create({
+            value: 1,
+            postId: this.post.id,
+            userId: this.user.id
+          })
+          .then((vote) => {
+            expect(vote.value).toBe(1);
+            expect(vote.postId).toBe(this.post.id);
+            expect(vote.userId).toBe(this.user.id);
+            done();
+            });
+          });
+        });
+
       });
 
       describe("#setUser()", () => {

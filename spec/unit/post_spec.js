@@ -140,6 +140,70 @@ describe("Post", () => {
       });
     });
    });
+
+   describe("#getPoints()", () => {
+    
+    it("should return all associated votes", (done) => {
+      this.post.getPoints()
+      .then((pointsCount) => {
+        expect(pointsCount).toBe(0);
+        done();
+      });
+    });
+   });
+
+   describe("#hasUpvoteFor()", () => {
+    
+    it("should return true if the associated user has an upvote", (done) => {
+      Vote.create({
+        value: 1,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+
+      this.post.hasUpvoteFor(userId)
+      .then((upvoteCheck) => {
+        expect(upvoteCheck).toBe(true);
+        done();
+      });
+    });
+
+    it("should return false if the associated user has no upvote", (done) => {
+      this.post.hasDownvoteFor(userId)
+      .then((downvoteCheck) => {
+        expect(downvoteCheck).toBe(false);
+        done();
+      });
+    });
+
+   });
+
+   describe("#hasDownvoteFor()", () => {
+    
+    it("should return true if the associated user has a downvote", (done) => {
+      Vote.create({
+        value: -1,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+
+      this.post.hasDownvoteFor(userId)
+      .then((downvoteCheck) => {
+        expect(downvoteCheck).toBe(true);
+        done();
+      });
+    });
+
+    it("should return false if the associated user has no downvote", (done) => {
+      this.post.hasDownvoteFor(userId)
+      .then((downvoteCheck) => {
+        expect(downvoteCheck).toBe(false);
+        done();
+      });
+    });
+
+   });
+
   });
 
 });
