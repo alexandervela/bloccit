@@ -65,34 +65,34 @@ describe("routes : votes", () => {
         }
       );
 
-    });
 
-    describe("GET /topics/:topicId/posts/:postId/votes/upvote", () => {
+      describe("GET /topics/:topicId/posts/:postId/votes/upvote", () => {
 
-      it("should not create a new vote", (done) => {
-        const options = {
-          url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
-        };
-        request.get(options,
-          (err, res, body) => {
-            Vote.findOne({            // look for the vote, should not find one.
-              where: {
-                userId: this.user.id,
-                postId: this.post.id
-              }
-            })
-            .then((vote) => {
-              expect(vote).toBeNull();
-              done();
-            })
-            .catch((err) => {
-              console.log(err);
-              done();
-            });
-          }
-        );
+        it("should not create a new vote", (done) => {
+          const options = {
+            url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
+          };
+          request.get(options,
+            (err, res, body) => {
+              Vote.findOne({            // look for the vote, should not find one.
+                where: {
+                  userId: this.user.id,
+                  postId: this.post.id
+                }
+              })
+              .then((vote) => {
+                expect(vote).toBeNull();
+                done();
+              })
+              .catch((err) => {
+                console.log(err);
+                done();
+              });
+            }
+          );
+        });
+
       });
-
     });
   });
 
