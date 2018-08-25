@@ -6,6 +6,7 @@ const User = require("../../src/db/models").User;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const Comment = require("../../src/db/models").Comment;
+const Favorite = require("../../src/db/models").Favorite;
 
 describe("routes : users", () => {
 
@@ -102,6 +103,7 @@ describe("routes : users", () => {
           this.user;
           this.post;
           this.comment;
+          this.favorite;
    
           User.create({
             email: "starman@tesla.com",
@@ -134,18 +136,27 @@ describe("routes : users", () => {
               })
               .then((res) => {
                 this.comment = res;
+
+                Favorite.create({
+                  userId: this.user.id,
+                  postId: this.post.id
+                })
+                .then((res) => {
+                  this.favorite = res;
                 done();
+                })
               })
             })
           })
    
         });
    
-        it("should present a list of comments and posts a user has created", (done) => {
+        it("should present a list of comments, posts, and favorites a user has created", (done) => {
    
           request.get(`${base}${this.user.id}`, (err, res, body) => {
             expect(body).toContain("Snowball Fighting");
-            expect(body).toContain("This comment is alright.")
+            expect(body).toContain("This comment is alright.");
+            expect(this.favorite).not.toBeNull();
             done();
           });
    
